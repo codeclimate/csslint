@@ -83,7 +83,7 @@
              */
             var generateSource = function(rule) {
                 if (!rule || !("name" in rule)) {
-                    return "";
+                    return "net.csslint.generic";
                 }
                 return "net.csslint." + rule.name.replace(/\s/g,"");
             };
