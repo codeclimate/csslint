@@ -20,7 +20,7 @@
   },
   "main": "./lib/csslint-node.js",
   "bin": {
-    "csslint": "./cli.js"
+    "csslint": "./release/npm/cli.js"
   },
   "scripts": {
     "test": "grunt test"
