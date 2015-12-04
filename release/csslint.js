@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-/* Build: v0.10.0 07-July-2015 06:12:11 */
+/* Build: v0.10.0 04-December-2015 05:13:50 */
 var exports = exports || {};
 var CSSLint = (function(){
 /*!

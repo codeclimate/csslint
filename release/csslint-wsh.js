@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-/* Build: v0.10.0 07-July-2015 06:12:11 */
+/* Build: v0.10.0 04-December-2015 05:13:50 */
 var exports = exports || {};
 var CSSLint = (function(){
 /*!
@@ -9760,6 +9760,7 @@ function cli(api){
         "warnings"    : { "format" : "<rule[,rule]+>",         "description" : "Indicate which rules to include as warnings."},
         "ignore"      : { "format" : "<rule[,rule]+>",         "description" : "Indicate which rules to ignore completely."},
         "exclude-list": { "format" : "<file|dir[,file|dir]+>", "description" : "Indicate which files/directories to exclude from being linted."},
+        "exclude-exts": { "format" : "<.ext[,.ext]+>",         "description" : "Indicate which extensions to exclude from being linted."},
         "config"      : { "format" : "<file>",                 "description" : "Reads csslint options from specified file."},
         "version"     : { "format" : "",                       "description" : "Outputs the current version number."}
     };
@@ -9767,6 +9768,18 @@ function cli(api){
     //-------------------------------------------------------------------------
     // Helper functions
     //-------------------------------------------------------------------------
+
+    /**
+     * Check if a path has any of the given extensions.
+     * @param path {String} the path to check.
+     * @param exts {Array} a list of extensions.
+     * @return {Boolean} if any extensions match the path
+     */
+    function hasExtension(path, exts) {
+        var regexp = new RegExp("(" + exts.join("|").replace(/\./g, "\\.") + ")$");
+
+        return regexp.test(path);
+    }
 
     /**
      * Returns an array of messages for a particular type.
@@ -9834,10 +9847,10 @@ function cli(api){
      */
     function filterFiles(files, options) {
         var excludeList = options["exclude-list"],
+            excludeExts = options["exclude-exts"],
             excludeFiles = [],
             filesToLint = files.map(api.getFullPath),
             fullPath;
-
 
         if (excludeList) {
             // Build up the exclude list, expanding any directory exclusions that were passed in
@@ -9848,15 +9861,24 @@ function cli(api){
                     excludeFiles.push(value);
                 }
             });
+        }
 
-            // Remove the excluded files from the list of files to lint
-            excludeFiles.forEach(function(value){
-                fullPath = api.getFullPath(value);
-                if (filesToLint.indexOf(fullPath) > -1) {
-                    filesToLint.splice(filesToLint.indexOf(fullPath),1);
+        if (excludeExts) {
+            // Add any extension-based exclusions
+            filesToLint.forEach(function(path) {
+                if (hasExtension(path, excludeExts.split(","))) {
+                    excludeFiles.push(path);
                 }
             });
         }
+
+        // Remove the excluded files from the list of files to lint
+        excludeFiles.forEach(function(value){
+            fullPath = api.getFullPath(value);
+            if (filesToLint.indexOf(fullPath) > -1) {
+                filesToLint.splice(filesToLint.indexOf(fullPath), 1);
+            }
+        });
 
         return filesToLint;
     }
