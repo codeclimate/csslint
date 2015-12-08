@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-/* Build: v0.10.0 04-December-2015 05:13:50 */
+/* Build: v0.10.0 08-December-2015 04:23:47 */
 var exports = exports || {};
 var CSSLint = (function(){
 /*!
@@ -9332,6 +9332,18 @@ CSSLint.addRule({
                 return "net.csslint." + rule.name.replace(/\s/g,"");
             };
 
+            /**
+             * Generate an identifier string for a rule.
+             * Uses the rule's id when present, else "generic".
+             * @param {Object} rule
+             * @return rule source as {String}
+             */
+            var generateIdentifier = function(rule) {
+                if (!rule || !("id" in rule)) {
+                    return "generic";
+                }
+                return rule.id;
+            };
 
 
             if (messages.length > 0) {
@@ -9340,7 +9352,8 @@ CSSLint.addRule({
                     //ignore rollups for now
                     if (!message.rollup) {
                         output.push("<error line=\"" + message.line + "\" column=\"" + message.col + "\" severity=\"" + message.type + "\"" +
-                          " message=\"" + xmlEscape(message.message) + "\" source=\"" + generateSource(message.rule) +"\"/>");
+                          " message=\"" + xmlEscape(message.message) + "\" source=\"" + generateSource(message.rule) +"\"" +
+                          " identifier=\"" + generateIdentifier(message.rule) + "\"/>");
                     }
                 });
                 output.push("</file>");
