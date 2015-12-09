@@ -60,7 +60,7 @@
          * @return {String} The error message.
          */
         readError: function(filename, message) {
-            return "<file name=\"" + xmlEscape(filename) + "\"><error line=\"0\" column=\"0\" severity=\"error\" source=\"net.csslint.readerror\" message=\"" + xmlEscape(message) + "\"></error></file>";
+            return "<file name=\"" + xmlEscape(filename) + "\"><error line=\"0\" column=\"0\" severity=\"error\" source=\"net.csslint.readerror\" identifier=\"read-error\" message=\"" + xmlEscape(message) + "\"></error></file>";
         },
 
         /**
